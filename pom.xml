@@ -11,7 +11,7 @@
 	<groupId>com.magneto</groupId>
 	<artifactId>mutante</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>mutante</name>
 	<description>Ejercicio  App</description>
 	<properties>
