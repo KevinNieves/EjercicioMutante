@@ -30,7 +30,7 @@ public class MutanteService {
     public ArrayList<mutanteModel> obtenerMutantes(){
         return (ArrayList<mutanteModel>) mutanteRepository.findAll();
     }
-    
+
     public ResponseEntity<String> postAdn(adnModel dnaArr){
 
         //Valida la secuencia de ADN y retorna true o false
