@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValidaADN.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mutante</a> &gt; <a href="index.source.html" class="el_package">com.magneto.mutante.dominio</a> &gt; <span class="el_source">ValidaADN.java</span></div><h1>ValidaADN.java</h1><pre class="source lang-java linenums">package com.magneto.mutante.dominio;
+
+public class ValidaADN {
+    //Variables
+    private String [][] mtADN;
+    
+    //Constructor
+<span class="fc" id="L8">    public ValidaADN() {</span>
+<span class="fc" id="L9">    }</span>
+
+    //Valda que la estructura sea de NxN
+    boolean estructuraADN(String[] adn, int filas) {
+        //Variables
+<span class="fc" id="L14">        boolean estructuraOk = true;</span>
+<span class="fc" id="L15">        int columnas = 0;</span>
+
+        //Valida que todos los String sean igual al tamaño del array
+<span class="fc bfc" id="L18" title="All 2 branches covered.">        for (int i = 0; i &lt; filas; i++) {</span>
+<span class="fc" id="L19">            columnas = adn[i].length();</span>
+<span class="pc bpc" id="L20" title="1 of 2 branches missed.">            if (columnas != filas) {</span>
+<span class="nc" id="L21">                estructuraOk = false;</span>
+<span class="nc" id="L22">                break;</span>
+            }
+        }
+<span class="fc" id="L25">        return estructuraOk;</span>
+    }
+
+    //Valda que los String contengan las letras (A,T,C,G)
+    boolean cadenaADN(String[] adn, int filas) {
+        //Variables
+<span class="fc" id="L31">        this.mtADN= new String[filas][filas];</span>
+<span class="fc" id="L32">        boolean cadenaOk = true;</span>
+<span class="fc" id="L33">        int columnas=filas;</span>
+        char subADN;
+        
+        // Valida que la cadena contenga (A,T,G,C)
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        for (int i = 0; i &lt; filas; i++) {</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">            for (int j = 0; j &lt; columnas; j++) {</span>
+<span class="fc" id="L39">                subADN = adn[i].charAt(j);</span>
+<span class="pc bpc" id="L40" title="1 of 8 branches missed.">                if (subADN != 'A' &amp;&amp; subADN != 'T' &amp;&amp; subADN != 'G' &amp;&amp; subADN != 'C') {</span>
+<span class="nc" id="L41">                    cadenaOk = false;</span>
+<span class="nc" id="L42">                    break;</span>
+                }else{
+<span class="fc" id="L44">                    mtADN[i][j]=Character.toString(subADN);</span>
+                }
+            }
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">            if (cadenaOk == false){</span>
+<span class="nc" id="L48">                break;</span>
+            }
+        }
+        //isMutant=matrizMutant(adn,col,fil); 
+
+<span class="fc" id="L53">        return cadenaOk;</span>
+    }
+    
+    boolean esMutante(int filas) {
+        //Variables
+<span class="fc" id="L58">        boolean esMutanteOK = false;</span>
+<span class="fc" id="L59">        int cont=0;</span>
+<span class="fc" id="L60">        String cadenaBase=&quot;&quot;;</span>
+<span class="fc" id="L61">        String cadenaValidacion=&quot;&quot;;</span>
+        
+        //Inicio validacion
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        for (int i = 0; i &lt; filas; i++) {</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">            for (int j = 0; j &lt; filas; j++) {</span>
+<span class="fc" id="L66">                cadenaBase = mtADN[i][j]+mtADN[i][j]+mtADN[i][j]+mtADN[i][j];</span>
+                //Vertical
+<span class="fc bfc" id="L68" title="All 2 branches covered.">                if ((i+3)&lt;filas){</span>
+<span class="fc" id="L69">                    cadenaValidacion=mtADN[i][j]+mtADN[i+1][j]+mtADN[i+2][j]+mtADN[i+3][j];</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">                    if (cadenaValidacion.equals(cadenaBase)){</span>
+<span class="fc" id="L71">                        cont++;</span>
+                    }
+                }
+                //Horizontal
+<span class="fc bfc" id="L75" title="All 2 branches covered.">                if ((j+3)&lt;filas){</span>
+<span class="fc" id="L76">                    cadenaValidacion=mtADN[i][j]+mtADN[i][j+1]+mtADN[i][j+2]+mtADN[i][j+3];</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">                    if (cadenaValidacion.equals(cadenaBase)){</span>
+<span class="fc" id="L78">                        cont++;</span>
+                    }
+                }
+                //Oblicua
+<span class="fc bfc" id="L82" title="All 4 branches covered.">                if (((i+3)&lt;filas)&amp;&amp;((j+3)&lt;filas)){</span>
+<span class="fc" id="L83">                    cadenaValidacion=mtADN[i][j]+mtADN[i][j+1]+mtADN[i][j+2]+mtADN[i][j+3];</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">                    if (cadenaValidacion.equals(cadenaBase)){</span>
+<span class="nc" id="L85">                        cont++;</span>
+                    }
+                }
+            }
+<span class="fc bfc" id="L89" title="All 2 branches covered.">            if (cont&gt;1){</span>
+<span class="fc" id="L90">                esMutanteOK=true;</span>
+<span class="fc" id="L91">                break;</span>
+            }
+        }
+<span class="fc" id="L94">        return esMutanteOK;</span>
+    }
+
+    public boolean isMutant(String[] adn) {
+        //variables
+<span class="fc" id="L99">        int filas = 0;</span>
+<span class="fc" id="L100">        boolean ADNCorrecto = true;</span>
+<span class="fc" id="L101">        boolean StringCorrecto = true;</span>
+<span class="fc" id="L102">        boolean isMutantVar = false;</span>
+
+        //Tamaño del array
+<span class="fc" id="L105">        filas = adn.length;</span>
+
+        //Verifica que se pueda obtener una matriz de NxN
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        if (filas&gt;=4){</span>
+<span class="fc" id="L109">          ADNCorrecto = estructuraADN(adn, filas);  </span>
+        }else{
+<span class="nc" id="L111">            ADNCorrecto = false;</span>
+        }
+        //Verifica que cada String contenga los tipos de letras permitidos
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">        if (ADNCorrecto == true) {</span>
+<span class="fc" id="L115">            StringCorrecto =cadenaADN(adn, filas);</span>
+        }else{
+<span class="nc" id="L117">            System.out.println(&quot;La matriz no es NxN o no permite construir secuencias de 4 caracteres&quot;);</span>
+        }
+        //Valida si es mutante
+<span class="pc bpc" id="L120" title="1 of 2 branches missed.">        if (StringCorrecto == true) {</span>
+<span class="fc" id="L121">            isMutantVar = esMutante(filas);</span>
+        }else{
+<span class="nc" id="L123">            System.out.println(&quot;Los string contiene letras distintas a (A,T,C,G)&quot;);</span>
+        }
+        
+
+<span class="fc" id="L127">        return isMutantVar;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,9 @@
+com\magneto\mutante\models\mutanteModel.class
+com\magneto\mutante\models\adnModel.class
+com\magneto\mutante\models\estadisticasModel.class
+com\magneto\mutante\MutanteApplication.class
+com\magneto\mutante\services\MutanteService.class
+com\magneto\mutante\dominio\ValidaADN.class
+com\magneto\mutante\controllers\MutanteController.class
+com\magneto\mutante\repositories\MutanteRepository.class
+com\magneto\mutante\ServletInitializer.class

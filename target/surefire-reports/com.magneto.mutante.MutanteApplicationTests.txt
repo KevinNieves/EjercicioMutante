@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.magneto.mutante.MutanteApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 23.819 s - in com.magneto.mutante.MutanteApplicationTests

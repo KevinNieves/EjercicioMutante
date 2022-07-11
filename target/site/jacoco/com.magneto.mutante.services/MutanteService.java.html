@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MutanteService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mutante</a> &gt; <a href="index.source.html" class="el_package">com.magneto.mutante.services</a> &gt; <span class="el_source">MutanteService.java</span></div><h1>MutanteService.java</h1><pre class="source lang-java linenums">
+package com.magneto.mutante.services;
+
+import java.util.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import com.magneto.mutante.dominio.ValidaADN;
+import com.magneto.mutante.models.adnModel;
+import com.magneto.mutante.models.estadisticasModel;
+import com.magneto.mutante.models.mutanteModel;
+import com.magneto.mutante.repositories.MutanteRepository;
+
+@Service
+<span class="fc" id="L17">public class MutanteService {</span>
+    mutanteModel mutante;
+<span class="fc" id="L19">    long idInsert=0;</span>
+<span class="fc" id="L20">    long totalRegistros=0;</span>
+<span class="fc" id="L21">    long totalADNMutante=0;</span>
+<span class="fc" id="L22">    double promedioMutante=0;</span>
+    boolean esMutante;
+
+    ArrayList&lt;mutanteModel&gt; listaMutante;
+
+    @Autowired
+    MutanteRepository mutanteRepository;
+
+    public ArrayList&lt;mutanteModel&gt; obtenerMutantes(){
+<span class="fc" id="L31">        return (ArrayList&lt;mutanteModel&gt;) mutanteRepository.findAll();</span>
+    }
+
+    public ResponseEntity&lt;String&gt; postAdn(adnModel dnaArr){
+
+        //Valida la secuencia de ADN y retorna true o false
+<span class="fc" id="L37">        String[] dna=dnaArr.getDna();</span>
+<span class="fc" id="L38">        String stringArray = Arrays.toString(dna);</span>
+<span class="fc" id="L39">        ValidaADN validaADN = new ValidaADN();</span>
+<span class="fc" id="L40">        esMutante=validaADN.isMutant(dna);</span>
+
+        //Guarda en BD la secuencia ****Falta guardar la cadena en BD
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        if (mutanteRepository.findByAdn(stringArray).size()==0){</span>
+<span class="nc" id="L44">            mutanteModel newMutante = new mutanteModel();</span>
+<span class="nc" id="L45">            newMutante.setAdn(stringArray);</span>
+<span class="nc" id="L46">            newMutante.setMutante(esMutante+&quot;&quot;);</span>
+<span class="nc" id="L47">            mutanteRepository.save(newMutante);</span>
+        }
+        
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if (esMutante==true){</span>
+<span class="fc" id="L51">            return new ResponseEntity&lt;&gt;(&quot;mutant: true&quot;,HttpStatus.OK);</span>
+        }else{
+<span class="nc" id="L53">            return new ResponseEntity&lt;&gt;(&quot;mutant: false&quot;,HttpStatus.FORBIDDEN);</span>
+        }
+        
+    }
+
+    public estadisticasModel estadisticasMutante(){
+
+<span class="fc" id="L60">        totalRegistros=mutanteRepository.count();</span>
+<span class="fc" id="L61">        totalADNMutante=mutanteRepository.findByMutante(&quot;true&quot;).size();</span>
+<span class="fc" id="L62">        promedioMutante=Math.pow((double)totalADNMutante/(double)totalRegistros,3);</span>
+
+<span class="fc" id="L64">        estadisticasModel estadistica = new estadisticasModel();</span>
+<span class="fc" id="L65">        estadistica.setCount_human_dna(totalRegistros+&quot;&quot;);</span>
+<span class="fc" id="L66">        estadistica.setCount_mutant_dna(totalADNMutante+&quot;&quot;);</span>
+<span class="fc" id="L67">        estadistica.setRatio(promedioMutante+&quot;&quot;);</span>
+
+<span class="fc" id="L69">        return estadistica;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
