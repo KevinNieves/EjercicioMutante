@@ -48,8 +48,6 @@ public class ValidaADN {
                 break;
             }
         }
-        //isMutant=matrizMutant(adn,col,fil); 
-
         return cadenaOk;
     }
     
@@ -97,8 +95,8 @@ public class ValidaADN {
     public boolean isMutant(String[] adn) {
         //variables
         int filas = 0;
-        boolean ADNCorrecto = true;
-        boolean StringCorrecto = true;
+        boolean ADNCorrecto = false;
+        boolean StringCorrecto = false;
         boolean isMutantVar = false;
 
         //Tamaño del array
@@ -107,22 +105,17 @@ public class ValidaADN {
         //Verifica que se pueda obtener una matriz de NxN
         if (filas>=4){
           ADNCorrecto = estructuraADN(adn, filas);  
-        }else{
-            ADNCorrecto = false;
         }
+
         //Verifica que cada String contenga los tipos de letras permitidos
         if (ADNCorrecto == true) {
             StringCorrecto =cadenaADN(adn, filas);
-        }else{
-            System.out.println("La matriz no es NxN o no permite construir secuencias de 4 caracteres");
         }
+
         //Valida si es mutante
         if (StringCorrecto == true) {
             isMutantVar = esMutante(filas);
-        }else{
-            System.out.println("Los string contiene letras distintas a (A,T,C,G)");
         }
-        
 
         return isMutantVar;
     }

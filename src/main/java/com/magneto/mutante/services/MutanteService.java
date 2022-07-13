@@ -15,36 +15,46 @@ import com.magneto.mutante.repositories.MutanteRepository;
 
 @Service
 public class MutanteService {
-    mutanteModel mutante;
-    long idInsert=0;
-    long totalRegistros=0;
-    long totalADNMutante=0;
-    double promedioMutante=0;
+    
+    int totalRegistros = 0;
+    int totalADNMutante = 0;
+    double promedioMutante = 0;
     boolean esMutante;
-
-    ArrayList<mutanteModel> listaMutante;
-
+    
     @Autowired
     MutanteRepository mutanteRepository;
-
-    public ArrayList<mutanteModel> obtenerMutantes(){
+    mutanteModel mutante= new mutanteModel();
+    ValidaADN validaADN = new ValidaADN();
+    estadisticasModel estadistica = new estadisticasModel();
+    
+    //Consulta todas las secuencias de ADN registradas
+    public ArrayList<mutanteModel> obtenerMutantes() {
         return (ArrayList<mutanteModel>) mutanteRepository.findAll();
     }
 
+    //Valida y guarda las secuencias de ADN 
     public ResponseEntity<String> postAdn(adnModel dnaArr){
-
-        //Valida la secuencia de ADN y retorna true o false
-        String[] dna=dnaArr.getDna();
-        String stringArray = Arrays.toString(dna);
-        ValidaADN validaADN = new ValidaADN();
-        esMutante=validaADN.isMutant(dna);
-
-        //Guarda en BD la secuencia ****Falta guardar la cadena en BD
-        if (mutanteRepository.findByAdn(stringArray).size()==0){
-            mutanteModel newMutante = new mutanteModel();
-            newMutante.setAdn(stringArray);
-            newMutante.setMutante(esMutante+"");
-            mutanteRepository.save(newMutante);
+        //Inicializa valores 
+        esMutante=false;
+        
+        //Convierte a String
+        String stringArray = Arrays.toString(dnaArr.getDna());
+        //Consulta en BD si existe el ADN
+        ArrayList<mutanteModel> ArrMutanteExistente = mutanteRepository.findByAdn(stringArray);
+        int contArrMutanteExistente = ArrMutanteExistente.size();
+        
+        
+        //Si no existe guarda en BD
+        if (contArrMutanteExistente==0){
+            //llama al metodo que valida la secuencia
+            esMutante=validaADN.isMutant(dnaArr.getDna());
+            //Guarda
+            mutante.setAdn(stringArray);
+            mutante.setMutante(esMutante+"");
+            mutanteRepository.save(mutante);
+        }else{
+            //Al ser evaluado con anterioridad se toma el valor registrado en la BD
+            esMutante=Boolean.valueOf(ArrMutanteExistente.get(0).getMutante());
         }
         
         if (esMutante==true){
@@ -55,16 +65,17 @@ public class MutanteService {
         
     }
 
-    public estadisticasModel estadisticasMutante(){
+    //Calcula las estadisticas 
+    public estadisticasModel estadisticasMutante() {
+        //Inicializa los valores
+        totalRegistros = (int)mutanteRepository.count();
+        totalADNMutante = mutanteRepository.findByMutante("true").size();
+        promedioMutante = (double) totalADNMutante / (double) totalRegistros;
 
-        totalRegistros=mutanteRepository.count();
-        totalADNMutante=mutanteRepository.findByMutante("true").size();
-        promedioMutante=Math.pow((double)totalADNMutante/(double)totalRegistros,3);
-
-        estadisticasModel estadistica = new estadisticasModel();
-        estadistica.setCount_human_dna(totalRegistros+"");
-        estadistica.setCount_mutant_dna(totalADNMutante+"");
-        estadistica.setRatio(promedioMutante+"");
+        //Carga el objeto
+        estadistica.setCount_human_dna(totalRegistros);
+        estadistica.setCount_mutant_dna(totalADNMutante);
+        estadistica.setRatio(promedioMutante);
 
         return estadistica;
     }
